@@ -12,10 +12,13 @@
 #define WINDOW_HEIGHT BOARD_HEIGHT
 
 typedef struct {
+	Color color;
+} Cell;
+typedef struct {
 	int width;
 	int height;
 	int data[5][5];
+	Vector2 pos;
 	Color color;
 } Block;
-typedef Color Cell;
 #endif
