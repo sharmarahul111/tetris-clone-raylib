@@ -1,5 +1,5 @@
 CC := gcc
-CFLAGS := -Wall -Wextra -Wshadow -Wpedantic -g
+CFLAGS := -Wall -Wextra -Wshadow -Wpedantic -g -fsanitize=address
 
 SRC := $(wildcard src/*.c)
 OBJS := $(patsubst src/%.c, build/%.o, $(SRC))

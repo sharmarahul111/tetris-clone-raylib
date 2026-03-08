@@ -16,12 +16,22 @@ typedef struct {
 	Color color;
 } Block;
 typedef Color Cell;
+Cell grid[GRID_ROWS][GRID_COLS];
 void game_loop(void);
+void draw_grid(void);
+void fill_grid(void);
 int main() {
-	Cell GRID[GRID_ROWS][GRID_COLS];
+	// Initializing
 	printf("Running...\n");
 	InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Tetris Clone");
 	SetTargetFPS(60);
+	fill_grid();
+	grid[2][4] = GREEN;
+	grid[3][4] = GREEN;
+	grid[4][4] = GREEN;
+	grid[4][5] = GREEN;
+
+	// Game loop
 	while (!WindowShouldClose()) {
 		game_loop();
 	}
@@ -30,6 +40,23 @@ int main() {
 }
 void game_loop() {
 	BeginDrawing();
-	DrawRectangle(20, 20, CELL_SIZE, CELL_SIZE, BLUE);
+	ClearBackground(BLACK);
+	draw_grid();
 	EndDrawing();
+}
+void draw_grid() {
+	for (int i = 0; i < GRID_ROWS; i++) {
+		for (int j = 0; j < GRID_COLS; j++) {
+			int posX = SIDEBAR_WIDTH + j * CELL_SIZE;
+			int posY = i * CELL_SIZE;
+			DrawRectangle(posX+4, posY+4, CELL_SIZE-4, CELL_SIZE-4, grid[i][j]);
+		}
+	}
+}
+void fill_grid() {
+	for (int i = 0; i < GRID_ROWS; i++) {
+		for (int j=0; j < GRID_COLS; j++) {
+			grid[i][j] = BLACK;
+		}
+	}
 }
