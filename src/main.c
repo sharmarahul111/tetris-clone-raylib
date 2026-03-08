@@ -1,5 +1,5 @@
 #include "definition.h"
-#include "block_preset.h"
+#include "pieces.h"
 #include <raylib.h>
 #include <stdio.h>
 void game_loop(void);
@@ -16,7 +16,7 @@ int main() {
 	InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Tetris Clone");
 	SetTargetFPS(10);
 	fill_grid();
-	current_block = block_preset(1);
+	current_block = pieces_preset(0);
 
 	// Game loop
 	while (!WindowShouldClose()) {
@@ -59,9 +59,9 @@ void fill_grid() {
 }
 
 void draw_block() {
-	for (int i = 0; i < current_block.preset.height; i++) {
-		for (int j = 0; j < current_block.preset.width; j++) {
-			if (current_block.preset.data[i][j] != 0) {
+	for (int i = 0; i < 4; i++) {
+		for (int j = 0; j < 4; j++) {
+			if (current_block.piece.data[0][i][j] != 0) {
 				int posX = SIDEBAR_WIDTH + (block_pos.x + j) * CELL_SIZE;
 				int posY = (block_pos.y + i) * CELL_SIZE;
 				DrawRectangle(posX + 4, posY + 4, CELL_SIZE - 4, CELL_SIZE - 4, current_block.color);

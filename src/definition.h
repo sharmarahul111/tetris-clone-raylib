@@ -15,13 +15,11 @@ typedef struct {
 	Color color;
 } Cell;
 typedef struct {
-	int width;
-	int height;
-	int data[5][5];
-} Preset;
+	// data[rotation][y][x]
+	int data[4][4][4];
+} Piece;
 typedef struct {
-	Preset preset;
-	Vector2 pos;
+	Piece piece;
 	Color color;
 } Block;
 #endif
