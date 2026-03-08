@@ -1,3 +1,5 @@
+#ifndef DEFINITION
+#define DEFINITION
 #include <raylib.h>
 #define GRID_COLS 10
 #define GRID_ROWS 20
@@ -16,3 +18,4 @@ typedef struct {
 	Color color;
 } Block;
 typedef Color Cell;
+#endif
