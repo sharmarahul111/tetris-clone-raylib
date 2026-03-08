@@ -83,7 +83,9 @@ void update_block(float dt) {
 	for (int i = 0; i < 4; i++) {
 		for (int j = 0; j < 4; j++) {
 			// check if block can go down
-			if (block.piece.data[0][i][j] !=0 && grid[(int)block_pos.y+i+1][(int)block_pos.x+j].data != 0) {
+			int gridX = (int)block_pos.x + j;
+			int gridY = (int)block_pos.y + i;
+			if (block.piece.data[0][i][j] != 0 && (gridY >= GRID_ROWS-1 || (grid[gridY + 1][gridX].data != 0))) {
 				can_go_down = false;
 				// integrate block function call
 				break;
