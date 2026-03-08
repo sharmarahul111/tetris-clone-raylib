@@ -1,22 +1,22 @@
 #include "definition.h"
+#include "block_preset.h"
 #include <raylib.h>
 #include <stdio.h>
-extern Block blocks[];
 void game_loop(void);
 void draw_grid(void);
 void fill_grid(void);
 void draw_block(void);
-Block block_preset(int type);
 
 Cell grid[GRID_ROWS][GRID_COLS];
 Block current_block;
+Vector2 block_pos;
 int main() {
 	// Initializing
 	printf("Running...\n");
 	InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Tetris Clone");
 	SetTargetFPS(10);
 	fill_grid();
-	current_block = blocks[1];
+	current_block = block_preset(1);
 
 	// Game loop
 	while (!WindowShouldClose()) {
@@ -59,11 +59,11 @@ void fill_grid() {
 }
 
 void draw_block() {
-	for (int i = 0; i < current_block.height; i++) {
-		for (int j = 0; j < current_block.width; j++) {
-			if (current_block.data[i][j] != 0) {
-				int posX = SIDEBAR_WIDTH + (current_block.pos.x + j) * CELL_SIZE;
-				int posY = (current_block.pos.y + i) * CELL_SIZE;
+	for (int i = 0; i < current_block.preset.height; i++) {
+		for (int j = 0; j < current_block.preset.width; j++) {
+			if (current_block.preset.data[i][j] != 0) {
+				int posX = SIDEBAR_WIDTH + (block_pos.x + j) * CELL_SIZE;
+				int posY = (block_pos.y + i) * CELL_SIZE;
 				DrawRectangle(posX + 4, posY + 4, CELL_SIZE - 4, CELL_SIZE - 4, current_block.color);
 			}
 		}

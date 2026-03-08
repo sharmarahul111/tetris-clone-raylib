@@ -18,6 +18,9 @@ typedef struct {
 	int width;
 	int height;
 	int data[5][5];
+} Preset;
+typedef struct {
+	Preset preset;
 	Vector2 pos;
 	Color color;
 } Block;
