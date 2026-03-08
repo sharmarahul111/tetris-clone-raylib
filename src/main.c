@@ -5,7 +5,8 @@
 #define CELL_SIZE 30
 #define BOARD_WIDTH (GRID_COLS * CELL_SIZE)
 #define BOARD_HEIGHT (GRID_ROWS * CELL_SIZE)
-#define SIDEBAR_WIDTH 200
+// #define SIDEBAR_WIDTH 200
+#define SIDEBAR_WIDTH 0
 #define WINDOW_WIDTH (BOARD_WIDTH + SIDEBAR_WIDTH)
 #define WINDOW_HEIGHT BOARD_HEIGHT
 
@@ -24,7 +25,7 @@ int main() {
 	// Initializing
 	printf("Running...\n");
 	InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Tetris Clone");
-	SetTargetFPS(60);
+	SetTargetFPS(10);
 	fill_grid();
 
 	// Game loop
