@@ -12,6 +12,7 @@
 #define WINDOW_HEIGHT BOARD_HEIGHT
 
 typedef struct {
+	int data;
 	Color color;
 } Cell;
 typedef struct {
