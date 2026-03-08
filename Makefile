@@ -11,7 +11,7 @@ build:
 
 build/tetris-clone: $(OBJS) | build
 	@echo "Building binary..."
-	@$(CC) $(CFLAGS) $^ -o $@
+	@$(CC) $(CFLAGS) -lraylib $^ -o $@
 
 build/%.o: src/%.c | build
 	@echo "Compiling..." $<
