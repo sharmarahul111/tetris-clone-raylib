@@ -26,10 +26,6 @@ int main() {
 	InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Tetris Clone");
 	SetTargetFPS(60);
 	fill_grid();
-	grid[2][4] = GREEN;
-	grid[3][4] = GREEN;
-	grid[4][4] = GREEN;
-	grid[4][5] = GREEN;
 
 	// Game loop
 	while (!WindowShouldClose()) {
@@ -49,14 +45,22 @@ void draw_grid() {
 		for (int j = 0; j < GRID_COLS; j++) {
 			int posX = SIDEBAR_WIDTH + j * CELL_SIZE;
 			int posY = i * CELL_SIZE;
-			DrawRectangle(posX+4, posY+4, CELL_SIZE-4, CELL_SIZE-4, grid[i][j]);
+			DrawRectangle(posX + 4, posY + 4, CELL_SIZE - 4, CELL_SIZE - 4, grid[i][j]);
 		}
 	}
 }
 void fill_grid() {
 	for (int i = 0; i < GRID_ROWS; i++) {
-		for (int j=0; j < GRID_COLS; j++) {
-			grid[i][j] = BLACK;
+		for (int j = 0; j < GRID_COLS; j++) {
+			if (i==19) {
+				grid[i][j] = GREEN;
+			} else if (i==18 && (j%2==0 || j%3==0)) {
+				grid[i][j] = GREEN;
+			} else if (i==17 && j%4==0) {
+				grid[i][j] = GREEN;
+			} else {
+				grid[i][j] = BLACK;
+			}
 		}
 	}
 }
