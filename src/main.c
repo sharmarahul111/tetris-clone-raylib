@@ -16,8 +16,9 @@ void handle_input(void);
 
 Cell grid[GRID_ROWS][GRID_COLS];
 Block block;
-int blockX = 0;
+int blockX = 3;
 int blockY = 0;
+int rotation = 0;
 int frame = 0;
 int main() {
 	// Initializing
@@ -77,7 +78,7 @@ void fill_grid() {
 void draw_block() {
 	for (int i = 0; i < 4; i++) {
 		for (int j = 0; j < 4; j++) {
-			if (block.piece.data[0][i][j] != 0) {
+			if (block.piece.data[rotation][i][j] != 0) {
 				int posX = SIDEBAR_WIDTH + (blockX + j) * CELL_SIZE;
 				int posY = (blockY + i) * CELL_SIZE;
 				DrawRectangle(posX + 4, posY + 4, CELL_SIZE - 4, CELL_SIZE - 4, block.color);
@@ -93,7 +94,7 @@ void update_block() {
 			// check if block can go down
 			int gridX = blockX + j;
 			int gridY = blockY + i;
-			if (block.piece.data[0][i][j] != 0 && (gridY >= GRID_ROWS - 1 || (grid[gridY + 1][gridX].data != 0))) {
+			if (block.piece.data[rotation][i][j] != 0 && (gridY >= GRID_ROWS - 1 || (grid[gridY + 1][gridX].data != 0))) {
 				can_go_down = false;
 				merge_block();
 				next_piece();
@@ -102,7 +103,7 @@ void update_block() {
 			}
 		}
 	}
-	if (can_go_down && frame%5==0) {
+	if (can_go_down && frame % 10 == 0) {
 		blockY += 1;
 	}
 	handle_input();
@@ -112,7 +113,7 @@ void merge_block() {
 		for (int j = 0; j < 4; j++) {
 			int gridX = blockX + j;
 			int gridY = blockY + i;
-			if (block.piece.data[0][i][j] != 0) {
+			if (block.piece.data[rotation][i][j] != 0) {
 				grid[gridY][gridX].data = 1;
 				grid[gridY][gridX].color = block.color;
 			}
@@ -123,19 +124,20 @@ void next_piece() {
 	// randomize piece and x axis
 	int piece = rand() % PIECE_COUNT;
 	block = pieces_preset(piece);
-	// blockX = 3;
+	blockX = 3;
+	rotation = 0;
 	blockY = 0;
 }
 
 void handle_input() {
-	if (IsKeyDown(KEY_RIGHT) && frame%2==0) {
+	if (IsKeyDown(KEY_RIGHT) && frame % 3 == 0) {
 		bool can_go_right = true;
 		for (int i = 0; i < 4; i++) {
 			for (int j = 0; j < 4; j++) {
 				// check if block can go right
 				int gridX = blockX + j;
 				int gridY = blockY + i;
-				if (block.piece.data[0][i][j] != 0 && (gridX >= GRID_COLS - 1 || (grid[gridY][gridX+1].data != 0))) {
+				if (block.piece.data[rotation][i][j] != 0 && (gridX >= GRID_COLS - 1 || (grid[gridY][gridX + 1].data != 0))) {
 					can_go_right = false;
 					break;
 				}
@@ -146,14 +148,14 @@ void handle_input() {
 		}
 	}
 
-	if (IsKeyDown(KEY_LEFT) && frame%2==0) {
+	if (IsKeyDown(KEY_LEFT) && frame % 3 == 0) {
 		bool can_go_left = true;
 		for (int i = 0; i < 4; i++) {
 			for (int j = 0; j < 4; j++) {
 				// check if block can go left
 				int gridX = blockX + j;
 				int gridY = blockY + i;
-				if (block.piece.data[0][i][j] != 0 && (gridX <= 0 || (grid[gridY][gridX-1].data != 0))) {
+				if (block.piece.data[rotation][i][j] != 0 && (gridX <= 0 || (grid[gridY][gridX - 1].data != 0))) {
 					can_go_left = false;
 					break;
 				}
@@ -161,6 +163,31 @@ void handle_input() {
 		}
 		if (can_go_left) {
 			blockX -= 1;
+		}
+	}
+
+	if (IsKeyDown(KEY_UP) && frame % 5 == 0) {
+		bool can_rotate = true;
+		for (int i = 0; i < 4; i++) {
+			for (int j = 0; j < 4; j++) {
+				// check if block can go left
+				int gridX = blockX + j;
+				int gridY = blockY + i;
+				if (
+					block.piece.data[(rotation + 1) % 4][i][j] != 0 &&
+					(
+						(gridX < 0 || gridX >= GRID_COLS) ||
+						(gridY >= GRID_ROWS) ||
+						(grid[gridY][gridX].data != 0)
+					)
+				) {
+					can_rotate = false;
+					break;
+				}
+			}
+		}
+		if (can_rotate) {
+			rotation = (rotation + 1) % 4;
 		}
 	}
 }
