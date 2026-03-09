@@ -58,19 +58,8 @@ void draw_grid() {
 void fill_grid() {
 	for (int i = 0; i < GRID_ROWS; i++) {
 		for (int j = 0; j < GRID_COLS; j++) {
-			if (i == 19) {
-				grid[i][j].color = GREEN;
-				grid[i][j].data = 1;
-			} else if (i == 18 && (j % 2 == 0 || j % 3 == 0)) {
-				grid[i][j].color = GREEN;
-				grid[i][j].data = 1;
-			} else if (i == 17 && j % 4 == 0) {
-				grid[i][j].color = GREEN;
-				grid[i][j].data = 1;
-			} else {
-				grid[i][j].color = BLACK;
-				grid[i][j].data = 0;
-			}
+			grid[i][j].color = BLACK;
+			grid[i][j].data = 0;
 		}
 	}
 }
