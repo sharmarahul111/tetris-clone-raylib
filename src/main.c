@@ -3,6 +3,8 @@
 #include <raylib.h>
 #include <stdbool.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
 void game_loop(void);
 void draw_grid(void);
 void fill_grid(void);
@@ -16,6 +18,7 @@ Block block;
 Vector2 block_pos;
 int main() {
 	// Initializing
+	srand(time(0));
 	printf("Running...\n");
 	InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Tetris Clone");
 	SetTargetFPS(6);
@@ -114,6 +117,7 @@ void merge_block() {
 }
 void next_piece() {
 	// randomize piece and x axis
-	block = pieces_preset(1);
-	block_pos = (Vector2){0, 0};
+	int piece = rand()%PIECE_COUNT;
+	block = pieces_preset(piece);
+	block_pos = (Vector2){3, 0};
 }

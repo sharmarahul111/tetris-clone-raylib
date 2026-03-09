@@ -10,6 +10,7 @@
 #define SIDEBAR_WIDTH 0
 #define WINDOW_WIDTH (BOARD_WIDTH + SIDEBAR_WIDTH)
 #define WINDOW_HEIGHT BOARD_HEIGHT
+#define PIECE_COUNT 7
 
 typedef struct {
 	int data;
