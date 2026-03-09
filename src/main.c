@@ -97,7 +97,7 @@ void update_block(float dt) {
 		}
 	}
 	if (can_go_down) {
-		block_pos.y++;
+		block_pos.y += (int)(dt * 10);
 	}
 }
 void merge_block() {
