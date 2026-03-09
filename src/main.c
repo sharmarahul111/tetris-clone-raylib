@@ -12,6 +12,7 @@ void draw_block(void);
 void update_block(float dt);
 void merge_block(void);
 void next_piece(void);
+void handle_input(void);
 
 Cell grid[GRID_ROWS][GRID_COLS];
 Block block;
@@ -99,6 +100,7 @@ void update_block(float dt) {
 			}
 		}
 	}
+	handle_input();
 	if (can_go_down) {
 		block_pos.y += (int)(dt * 10);
 	}
@@ -120,4 +122,11 @@ void next_piece() {
 	int piece = rand()%PIECE_COUNT;
 	block = pieces_preset(piece);
 	block_pos = (Vector2){3, 0};
+}
+
+void handle_input(){
+	// if(IsKeyDown(KEY_RIGHT)){
+	// 	block_pos.x += 1;
+	// }
+	block_pos.x += IsKeyDown(KEY_RIGHT)-IsKeyDown(KEY_LEFT);
 }
