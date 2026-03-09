@@ -8,6 +8,8 @@ void draw_grid(void);
 void fill_grid(void);
 void draw_block(void);
 void update_block(float dt);
+void merge_block(void);
+void next_piece(void);
 
 Cell grid[GRID_ROWS][GRID_COLS];
 Block block;
@@ -16,7 +18,7 @@ int main() {
 	// Initializing
 	printf("Running...\n");
 	InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Tetris Clone");
-	SetTargetFPS(4);
+	SetTargetFPS(6);
 	fill_grid();
 	block = pieces_preset(0);
 
@@ -85,13 +87,33 @@ void update_block(float dt) {
 			// check if block can go down
 			int gridX = (int)block_pos.x + j;
 			int gridY = (int)block_pos.y + i;
-			if (block.piece.data[0][i][j] != 0 && (gridY >= GRID_ROWS-1 || (grid[gridY + 1][gridX].data != 0))) {
+			if (block.piece.data[0][i][j] != 0 && (gridY >= GRID_ROWS - 1 || (grid[gridY + 1][gridX].data != 0))) {
 				can_go_down = false;
-				// integrate block function call
+				merge_block();
+				next_piece();
+				block_pos.y = 0;
 				break;
 			}
 		}
 	}
-	if (can_go_down)
+	if (can_go_down) {
 		block_pos.y++;
+	}
+}
+void merge_block() {
+	for (int i = 0; i < 4; i++) {
+		for (int j = 0; j < 4; j++) {
+			int gridX = (int)block_pos.x + j;
+			int gridY = (int)block_pos.y + i;
+			if (block.piece.data[0][i][j] != 0) {
+				grid[gridY][gridX].data = 1;
+				grid[gridY][gridX].color = block.color;
+			}
+		}
+	}
+}
+void next_piece() {
+	// randomize piece and x axis
+	block = pieces_preset(1);
+	block_pos = (Vector2){0, 0};
 }
