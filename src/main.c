@@ -9,33 +9,35 @@ void game_loop(void);
 void draw_grid(void);
 void fill_grid(void);
 void draw_block(void);
-void update_block(float dt);
+void update_block(void);
 void merge_block(void);
 void next_piece(void);
 void handle_input(void);
 
 Cell grid[GRID_ROWS][GRID_COLS];
 Block block;
-Vector2 block_pos;
+int blockX = 0;
+int blockY = 0;
+int frame = 0;
 int main() {
 	// Initializing
 	srand(time(0));
 	printf("Running...\n");
 	InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Tetris Clone");
-	SetTargetFPS(6);
+	SetTargetFPS(FRAME_RATE);
 	fill_grid();
 	block = pieces_preset(0);
 
 	// Game loop
 	while (!WindowShouldClose()) {
 		game_loop();
+		frame++;
 	}
 	CloseWindow();
 	return 0;
 }
 void game_loop() {
-	float dt = GetFrameTime();
-	update_block(dt);
+	update_block();
 	BeginDrawing();
 	ClearBackground(BLACK);
 	draw_grid();
@@ -76,40 +78,40 @@ void draw_block() {
 	for (int i = 0; i < 4; i++) {
 		for (int j = 0; j < 4; j++) {
 			if (block.piece.data[0][i][j] != 0) {
-				int posX = SIDEBAR_WIDTH + (block_pos.x + j) * CELL_SIZE;
-				int posY = (block_pos.y + i) * CELL_SIZE;
+				int posX = SIDEBAR_WIDTH + (blockX + j) * CELL_SIZE;
+				int posY = (blockY + i) * CELL_SIZE;
 				DrawRectangle(posX + 4, posY + 4, CELL_SIZE - 4, CELL_SIZE - 4, block.color);
 			}
 		}
 	}
 }
 
-void update_block(float dt) {
+void update_block() {
 	bool can_go_down = true;
 	for (int i = 0; i < 4; i++) {
 		for (int j = 0; j < 4; j++) {
 			// check if block can go down
-			int gridX = (int)block_pos.x + j;
-			int gridY = (int)block_pos.y + i;
+			int gridX = blockX + j;
+			int gridY = blockY + i;
 			if (block.piece.data[0][i][j] != 0 && (gridY >= GRID_ROWS - 1 || (grid[gridY + 1][gridX].data != 0))) {
 				can_go_down = false;
 				merge_block();
 				next_piece();
-				block_pos.y = 0;
+				blockY = 0;
 				break;
 			}
 		}
 	}
-	handle_input();
-	if (can_go_down) {
-		block_pos.y += (int)(dt * 10);
+	if (can_go_down && frame%5==0) {
+		blockY += 1;
 	}
+	handle_input();
 }
 void merge_block() {
 	for (int i = 0; i < 4; i++) {
 		for (int j = 0; j < 4; j++) {
-			int gridX = (int)block_pos.x + j;
-			int gridY = (int)block_pos.y + i;
+			int gridX = blockX + j;
+			int gridY = blockY + i;
 			if (block.piece.data[0][i][j] != 0) {
 				grid[gridY][gridX].data = 1;
 				grid[gridY][gridX].color = block.color;
@@ -119,14 +121,46 @@ void merge_block() {
 }
 void next_piece() {
 	// randomize piece and x axis
-	int piece = rand()%PIECE_COUNT;
+	int piece = rand() % PIECE_COUNT;
 	block = pieces_preset(piece);
-	block_pos = (Vector2){3, 0};
+	// blockX = 3;
+	blockY = 0;
 }
 
-void handle_input(){
-	// if(IsKeyDown(KEY_RIGHT)){
-	// 	block_pos.x += 1;
-	// }
-	block_pos.x += IsKeyDown(KEY_RIGHT)-IsKeyDown(KEY_LEFT);
+void handle_input() {
+	if (IsKeyDown(KEY_RIGHT) && frame%2==0) {
+		bool can_go_right = true;
+		for (int i = 0; i < 4; i++) {
+			for (int j = 0; j < 4; j++) {
+				// check if block can go right
+				int gridX = blockX + j;
+				int gridY = blockY + i;
+				if (block.piece.data[0][i][j] != 0 && (gridX >= GRID_COLS - 1 || (grid[gridY][gridX+1].data != 0))) {
+					can_go_right = false;
+					break;
+				}
+			}
+		}
+		if (can_go_right) {
+			blockX += 1;
+		}
+	}
+
+	if (IsKeyDown(KEY_LEFT) && frame%2==0) {
+		bool can_go_left = true;
+		for (int i = 0; i < 4; i++) {
+			for (int j = 0; j < 4; j++) {
+				// check if block can go left
+				int gridX = blockX + j;
+				int gridY = blockY + i;
+				if (block.piece.data[0][i][j] != 0 && (gridX <= 0 || (grid[gridY][gridX-1].data != 0))) {
+					can_go_left = false;
+					break;
+				}
+			}
+		}
+		if (can_go_left) {
+			blockX -= 1;
+		}
+	}
 }
