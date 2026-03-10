@@ -16,9 +16,12 @@ void handle_input(void);
 void check_rows(void);
 void eliminate_row(int r);
 void draw_score(void);
+void draw_next_block(void);
 
 Cell grid[GRID_ROWS][GRID_COLS];
 Block block;
+int next_piece_type = 0;
+// int saved_block_type = 0;
 int blockX = 3;
 int blockY = 0;
 int rotation = 0;
@@ -34,6 +37,8 @@ int main() {
 	InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Tetris Clone");
 	SetTargetFPS(FRAME_RATE);
 	fill_grid();
+	// set a random piece to start with
+	next_piece_type = GetRandomValue(0, PIECE_COUNT-1);
 	next_piece();
 
 	// Game loop
@@ -52,6 +57,7 @@ void game_loop() {
 	draw_outlines();
 	draw_block();
 	draw_score();
+	draw_next_block();
 	DrawFPS(2, 20);
 	EndDrawing();
 }
@@ -121,10 +127,8 @@ void merge_block() {
 	}
 }
 void next_piece() {
-	// randomize piece and x axis
-	int piece = GetRandomValue(0, PIECE_COUNT-1);
-	printf("%d\n", piece);
-	block = pieces_preset(piece);
+	block = pieces_preset(next_piece_type);
+	next_piece_type = GetRandomValue(0, PIECE_COUNT-1);
 	blockX = 3;
 	rotation = 0;
 	blockY = 0;
@@ -234,4 +238,18 @@ void draw_score(){
 	sprintf(score_text, "%d", score);
 	DrawText("SCORE:", 20, WINDOW_HEIGHT-100, 30, GREEN);
 	DrawText(score_text, 20, WINDOW_HEIGHT-60, 30, GREEN);
+}
+
+void draw_next_block(){
+	Block b = pieces_preset((next_piece_type));
+	for (int i = 0; i < 4; i++) {
+		for (int j = 0; j < 4; j++) {
+			if (b.piece.data[0][i][j] != 0) {
+				int posX = 30+j*CELL_SIZE;
+				int posY = 200+i*CELL_SIZE;
+				DrawText("NEXT\nPIECE:", 30, 100, 30, GREEN);
+				DrawRectangle(posX + 4, posY + 4, CELL_SIZE - 4, CELL_SIZE - 4, b.color);
+			}
+		}
+	}
 }
