@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <time.h>
 void game_loop(void);
+void draw_outlines(void);
 void draw_grid(void);
 void fill_grid(void);
 void draw_block(void);
@@ -45,7 +46,9 @@ void game_loop() {
 	BeginDrawing();
 	ClearBackground(BLACK);
 	draw_grid();
+	draw_outlines();
 	draw_block();
+	DrawFPS(2, 20);
 	EndDrawing();
 }
 void draw_grid() {
@@ -215,4 +218,8 @@ void eliminate_row(int r){
 			grid[i][j] = grid[i-1][j];
 		}
 	}
+}
+
+void draw_outlines(){
+	DrawRectangleLines(SIDEBAR_WIDTH + 2, 2, BOARD_WIDTH - 4, WINDOW_HEIGHT - 4, GREEN);
 }
