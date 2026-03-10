@@ -3,7 +3,6 @@
 #include <raylib.h>
 #include <stdbool.h>
 #include <stdio.h>
-#include <stdlib.h>
 #include <time.h>
 void game_loop(void);
 void draw_outlines(void);
@@ -29,7 +28,8 @@ int score = 0;
 char score_text[5];
 int main() {
 	// Initializing
-	srand(time(0));
+	// srand(time(0));
+	SetRandomSeed(time(0));
 	printf("Running...\n");
 	InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Tetris Clone");
 	SetTargetFPS(FRAME_RATE);
@@ -122,7 +122,8 @@ void merge_block() {
 }
 void next_piece() {
 	// randomize piece and x axis
-	int piece = rand() % PIECE_COUNT;
+	int piece = GetRandomValue(0, PIECE_COUNT-1);
+	printf("%d\n", piece);
 	block = pieces_preset(piece);
 	blockX = 3;
 	rotation = 0;
@@ -226,7 +227,7 @@ void eliminate_row(int r){
 }
 
 void draw_outlines(){
-	DrawRectangleLines(SIDEBAR_WIDTH + 2, 2, BOARD_WIDTH - 4, WINDOW_HEIGHT - 4, GREEN);
+	DrawRectangleLines(SIDEBAR_WIDTH + 2, 2, BOARD_WIDTH - 2, WINDOW_HEIGHT - 2, GREEN);
 }
 
 void draw_score(){
