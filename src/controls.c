@@ -1,23 +1,24 @@
 #include "controls.h"
 #include "definition.h"
 #include <raylib.h>
-extern int speed, frame, blockX, blockY, rotation;
+extern int speed, blockX, blockY, rotation;
+extern float t;
 extern Cell grid[GRID_ROWS][GRID_COLS];
 extern Block block;
 void handle_input() {
-	if (IsKeyDown(KEY_RIGHT) && frame % 3 == 0) {
+	if (IsKeyPressed(KEY_RIGHT)) {
 		move_right();
 	}
 
-	if (IsKeyDown(KEY_LEFT) && frame % 3 == 0) {
+	if (IsKeyPressed(KEY_LEFT)) {
 		move_left();
 	}
 
-	if (IsKeyDown(KEY_UP) && frame % 5 == 0) {
+	if (IsKeyPressed(KEY_UP)) {
 		rotate_piece();
 	}
 
-	if (IsKeyDown(KEY_DOWN) && frame % 2 == 0){
+	if (IsKeyDown(KEY_DOWN)){
 		speed = 1;
 	} else {
 		speed = 10;
