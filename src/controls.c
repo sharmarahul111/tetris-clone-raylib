@@ -3,27 +3,33 @@
 #include <raylib.h>
 extern int speed, blockX, blockY, rotation;
 extern float t;
+extern bool is_paused;
+extern Sound technologia;
 extern Cell grid[GRID_ROWS][GRID_COLS];
 extern Block block;
 void handle_input() {
-	if (IsKeyPressed(KEY_RIGHT)) {
+	if (IsKeyDown(KEY_RIGHT)) {
 		move_right();
 	}
 
-	if (IsKeyPressed(KEY_LEFT)) {
+	if (IsKeyDown(KEY_LEFT)) {
 		move_left();
 	}
 
-	if (IsKeyPressed(KEY_UP)) {
+	if (IsKeyDown(KEY_UP)) {
 		rotate_piece();
 	}
-
+}
+void handle_timefree_input(){
+	if(IsKeyPressed(KEY_SPACE)) {
+		PlaySound(technologia);
+		is_paused = !is_paused;
+	}
 	if (IsKeyDown(KEY_DOWN)){
 		speed = 1;
 	} else {
-		speed = 10;
+		speed = 15;
 	}
-	
 }
 
 void rotate_piece(){

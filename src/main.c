@@ -33,9 +33,10 @@ int next_piece_type = 0;
 int blockX = 3;
 int blockY = 0;
 int rotation = 0;
-int speed = 10;
+int speed = 15;
 int score = 0;
-float t = 0; // time
+float t = 0;
+int tt = 0;
 
 int dialog_width = 200;
 int dialog_height = 80;
@@ -84,13 +85,14 @@ int main() {
 }
 void game_loop() {
 	float dt = GetFrameTime();
-	if(IsKeyPressed(KEY_SPACE)) {
-		PlaySound(technologia);
-		is_paused = !is_paused;
-	}
+	handle_timefree_input();
 	if(!(is_game_over || is_paused) && is_started) {
-		update_block();
+		if (tt%speed == 0 && tt!=0) {
+			tt=0;
+			update_block();
+		}
 	}
+	handle_input();
 	BeginDrawing();
 	ClearBackground(BLACK);
 	draw_grid();
@@ -118,6 +120,10 @@ void game_loop() {
 	DrawFPS(30, 20);
 	EndDrawing();
 	t+=dt;
+	if (t>=0.05) {
+		tt++;
+		t=0;
+	}
 }
 void draw_grid() {
 	for (int i = 0; i < GRID_ROWS; i++) {
@@ -169,7 +175,6 @@ void update_block() {
 	if (can_go_down) {
 		blockY += 1;
 	}
-	handle_input();
 	check_rows();
 }
 void merge_block() {
