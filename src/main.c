@@ -33,6 +33,10 @@ int speed = 10;
 int score = 0;
 bool is_game_over = false;
 bool is_paused = false;
+
+Sound fahh;
+Sound technologia;
+Sound gameover;
 char score_text[5];
 int main() {
 	// Initializing
@@ -41,6 +45,11 @@ int main() {
 	printf("Running...\n");
 	InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Tetris Clone");
 	SetTargetFPS(FRAME_RATE);
+	InitAudioDevice();
+	// make windows friendly
+	fahh = LoadSound("assets/fahh.wav");
+	technologia = LoadSound("assets/technologia.wav");
+	gameover = LoadSound("assets/gameover.wav");
 	fill_grid();
 	// set a random piece to start with
 	next_piece_type = GetRandomValue(0, PIECE_COUNT-1);
@@ -51,11 +60,15 @@ int main() {
 		game_loop();
 		frame++;
 	}
+	CloseAudioDevice();
 	CloseWindow();
 	return 0;
 }
 void game_loop() {
-	if(IsKeyPressed(KEY_SPACE)) is_paused = !is_paused;
+	if(IsKeyPressed(KEY_SPACE)) {
+		PlaySound(technologia);
+		is_paused = !is_paused;
+	}
 	if(!(is_game_over || is_paused)) update_block();
 	BeginDrawing();
 	ClearBackground(BLACK);
@@ -133,7 +146,7 @@ void merge_block() {
 			int gridY = blockY + i;
 			if (block.piece.data[rotation][i][j] != 0 && gridY < GRID_ROWS) {
 				if(gridY == 0) {
-					// game_over();
+					PlaySound(gameover);
 					is_game_over = true;
 				}
 				grid[gridY][gridX].data = 1;
@@ -163,6 +176,7 @@ void check_rows(){
 		}
 		if (can_clear) {
 			// TODO: add bonus score
+			PlaySound(fahh);
 			score += 10;
 			eliminate_row(i);
 		}
