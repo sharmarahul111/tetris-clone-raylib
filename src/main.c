@@ -13,6 +13,8 @@ void update_block(void);
 void merge_block(void);
 void next_piece(void);
 void handle_input(void);
+void check_rows(void);
+void eliminate_row(int r);
 
 Cell grid[GRID_ROWS][GRID_COLS];
 Block block;
@@ -97,6 +99,7 @@ void update_block() {
 		blockY += 1;
 	}
 	handle_input();
+	check_rows();
 }
 void merge_block() {
 	for (int i = 0; i < 4; i++) {
@@ -182,9 +185,34 @@ void handle_input() {
 	}
 
 	if (IsKeyDown(KEY_DOWN) && frame % 2 == 0){
-		// update_block();
 		speed = 1;
 	} else {
 		speed = 10;
+	}
+}
+
+void check_rows(){
+	for (int i=GRID_ROWS-1; i>=0; i--) {
+		bool can_clear = true;
+		for (int j=0; j<GRID_COLS; j++) {
+			if (grid[i][j].data == 0) {
+				can_clear = false;
+				break;
+			}
+		}
+		if (can_clear) {
+			// TODO: increment score
+			eliminate_row(i);
+		}
+	}
+}
+
+void eliminate_row(int r){
+	// start with r, because bottom cells aren't affected
+	// and go till 1, since 0 doens't need any change (index)
+	for (int i=r; i>0; i--) {
+		for (int j=0; j<GRID_COLS; j++) {
+			grid[i][j] = grid[i-1][j];
+		}
 	}
 }
