@@ -1,6 +1,7 @@
 # Tetris clone made with raylib in C
 Learning raylib and C by making clone of the game of tetris
-[Play on web!!](https://sharmarahul111/github.io/)
+
+## [Play NOW!!](https://sharmarahul111.github.io/tetris-clone-raylib/)
 ![Preview Image](preview.png)
 
 ### ⚠️ Disclaimer
