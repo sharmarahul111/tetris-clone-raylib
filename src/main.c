@@ -16,6 +16,7 @@ void next_piece(void);
 void handle_input(void);
 void check_rows(void);
 void eliminate_row(int r);
+void draw_score(void);
 
 Cell grid[GRID_ROWS][GRID_COLS];
 Block block;
@@ -24,6 +25,8 @@ int blockY = 0;
 int rotation = 0;
 int frame = 0;
 int speed = 10;
+int score = 0;
+char score_text[5];
 int main() {
 	// Initializing
 	srand(time(0));
@@ -31,7 +34,7 @@ int main() {
 	InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Tetris Clone");
 	SetTargetFPS(FRAME_RATE);
 	fill_grid();
-	block = pieces_preset(0);
+	next_piece();
 
 	// Game loop
 	while (!WindowShouldClose()) {
@@ -48,6 +51,7 @@ void game_loop() {
 	draw_grid();
 	draw_outlines();
 	draw_block();
+	draw_score();
 	DrawFPS(2, 20);
 	EndDrawing();
 }
@@ -204,7 +208,8 @@ void check_rows(){
 			}
 		}
 		if (can_clear) {
-			// TODO: increment score
+			// TODO: add bonus score
+			score += 10;
 			eliminate_row(i);
 		}
 	}
@@ -222,4 +227,10 @@ void eliminate_row(int r){
 
 void draw_outlines(){
 	DrawRectangleLines(SIDEBAR_WIDTH + 2, 2, BOARD_WIDTH - 4, WINDOW_HEIGHT - 4, GREEN);
+}
+
+void draw_score(){
+	sprintf(score_text, "%d", score);
+	DrawText("SCORE:", 20, WINDOW_HEIGHT-100, 30, GREEN);
+	DrawText(score_text, 20, WINDOW_HEIGHT-60, 30, GREEN);
 }
