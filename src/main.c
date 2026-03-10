@@ -18,6 +18,7 @@ void eliminate_row(int r);
 void draw_score(void);
 void draw_next_block(void);
 void game_over(void);
+void pause_card(void);
 
 Cell grid[GRID_ROWS][GRID_COLS];
 Block block;
@@ -64,6 +65,9 @@ void game_loop() {
 	draw_next_block();
 	 if(is_game_over) {
 		game_over();
+	}
+	if(is_paused){
+		pause_card();
 	}
 	DrawFPS(2, 20);
 	EndDrawing();
@@ -278,4 +282,14 @@ void game_over(){
 	sprintf(score_text, "%d", score);
 	DrawText(text, x+(width-MeasureText(text, 40))/2, y+30, 40, GREEN);
 	DrawText(score_text, x+(width-MeasureText(score_text, 70))/2, y+90, 70, GREEN);
+}
+void pause_card(){
+	int width = 200;
+	int height = 80;
+	int x = (WINDOW_WIDTH-width)/2;
+	int y = (WINDOW_HEIGHT-height)/2;
+	char text[] = "PAUSED";
+	DrawRectangle(x, y, width, height, BLACK);
+	DrawRectangleLines(x, y, width, height, GREEN);
+	DrawText(text, x+(width-MeasureText(text, 40))/2, y+20, 40, GREEN);
 }
