@@ -5,6 +5,10 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <time.h>
+#if defined(PLATFORM_WEB)
+#include <emscripten/emscripten.h>
+#endif
+
 void game_loop(void);
 void draw_outlines(void);
 void draw_grid(void);
@@ -44,7 +48,6 @@ int main() {
 	SetRandomSeed(time(0));
 	printf("Running...\n");
 	InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Tetris Clone");
-	SetTargetFPS(FRAME_RATE);
 	InitAudioDevice();
 	// make windows friendly
 	fahh = LoadSound("assets/fahh.wav");
@@ -56,10 +59,15 @@ int main() {
 	next_piece();
 
 	// Game loop
+	#if defined(PLATFORM_WEB)
+		emscripten_set_main_loop(game_loop, 0, 1);
+	#else
+		
+	SetTargetFPS(FRAME_RATE);
 	while (!WindowShouldClose()) {
 		game_loop();
-		frame++;
 	}
+	#endif
 	CloseAudioDevice();
 	CloseWindow();
 	return 0;
@@ -83,8 +91,9 @@ void game_loop() {
 	if(is_paused){
 		pause_card();
 	}
-	DrawFPS(2, 20);
+	DrawFPS(30, 20);
 	EndDrawing();
+	frame++;
 }
 void draw_grid() {
 	for (int i = 0; i < GRID_ROWS; i++) {
@@ -195,6 +204,7 @@ void eliminate_row(int r){
 
 void draw_outlines(){
 	DrawRectangleLines(SIDEBAR_WIDTH + 2, 2, BOARD_WIDTH - 2, WINDOW_HEIGHT - 2, GREEN);
+	DrawRectangleLines(2, 2, SIDEBAR_WIDTH - 2, WINDOW_HEIGHT - 2, GREEN);
 }
 
 void draw_score(){
