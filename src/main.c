@@ -85,7 +85,6 @@ int main() {
 }
 void game_loop() {
 	float dt = GetFrameTime();
-	handle_timefree_input();
 	if(!(is_game_over || is_paused) && is_started) {
 		if (tt%speed == 0 && tt!=0) {
 			tt=0;

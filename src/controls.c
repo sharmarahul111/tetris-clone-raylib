@@ -8,19 +8,15 @@ extern Sound technologia;
 extern Cell grid[GRID_ROWS][GRID_COLS];
 extern Block block;
 void handle_input() {
-	if (IsKeyDown(KEY_RIGHT)) {
+	if (IsKeyPressed(KEY_RIGHT)) {
 		move_right();
 	}
-
-	if (IsKeyDown(KEY_LEFT)) {
+	if (IsKeyPressed(KEY_LEFT)) {
 		move_left();
 	}
-
-	if (IsKeyDown(KEY_UP)) {
+	if (IsKeyPressed(KEY_UP)) {
 		rotate_piece();
 	}
-}
-void handle_timefree_input(){
 	if(IsKeyPressed(KEY_SPACE)) {
 		PlaySound(technologia);
 		is_paused = !is_paused;
