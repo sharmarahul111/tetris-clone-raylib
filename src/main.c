@@ -20,6 +20,7 @@ int blockX = 3;
 int blockY = 0;
 int rotation = 0;
 int frame = 0;
+int speed = 10;
 int main() {
 	// Initializing
 	srand(time(0));
@@ -92,7 +93,7 @@ void update_block() {
 			}
 		}
 	}
-	if (can_go_down && frame % 10 == 0) {
+	if (can_go_down && frame % speed == 0) {
 		blockY += 1;
 	}
 	handle_input();
@@ -178,5 +179,12 @@ void handle_input() {
 		if (can_rotate) {
 			rotation = (rotation + 1) % 4;
 		}
+	}
+
+	if (IsKeyDown(KEY_DOWN) && frame % 2 == 0){
+		// update_block();
+		speed = 1;
+	} else {
+		speed = 10;
 	}
 }
