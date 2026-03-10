@@ -17,6 +17,7 @@ void check_rows(void);
 void eliminate_row(int r);
 void draw_score(void);
 void draw_next_block(void);
+void game_over(void);
 
 Cell grid[GRID_ROWS][GRID_COLS];
 Block block;
@@ -28,6 +29,7 @@ int rotation = 0;
 int frame = 0;
 int speed = 10;
 int score = 0;
+bool is_game_over = false;
 char score_text[5];
 int main() {
 	// Initializing
@@ -50,7 +52,7 @@ int main() {
 	return 0;
 }
 void game_loop() {
-	update_block();
+	if(!is_game_over) update_block();
 	BeginDrawing();
 	ClearBackground(BLACK);
 	draw_grid();
@@ -58,6 +60,9 @@ void game_loop() {
 	draw_block();
 	draw_score();
 	draw_next_block();
+	 if(is_game_over) {
+		game_over();
+	}
 	DrawFPS(2, 20);
 	EndDrawing();
 }
@@ -119,7 +124,11 @@ void merge_block() {
 		for (int j = 0; j < 4; j++) {
 			int gridX = blockX + j;
 			int gridY = blockY + i;
-			if (block.piece.data[rotation][i][j] != 0) {
+			if (block.piece.data[rotation][i][j] != 0 && gridY < GRID_ROWS) {
+				if(gridY == 0) {
+					// game_over();
+					is_game_over = true;
+				}
 				grid[gridY][gridX].data = 1;
 				grid[gridY][gridX].color = block.color;
 			}
@@ -252,4 +261,17 @@ void draw_next_block(){
 			}
 		}
 	}
+}
+
+void game_over(){
+	int width = 300;
+	int height = 200;
+	int x = (WINDOW_WIDTH-width)/2;
+	int y = (WINDOW_HEIGHT-height)/2;
+	char text[] = "GAME OVER";
+	DrawRectangle(x, y, width, height, BLACK);
+	DrawRectangleLines(x, y, width, height, GREEN);
+	sprintf(score_text, "%d", score);
+	DrawText(text, x+(width-MeasureText(text, 40))/2, y+30, 40, GREEN);
+	DrawText(score_text, x+(width-MeasureText(score_text, 70))/2, y+90, 70, GREEN);
 }
