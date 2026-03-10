@@ -30,6 +30,7 @@ int frame = 0;
 int speed = 10;
 int score = 0;
 bool is_game_over = false;
+bool is_paused = false;
 char score_text[5];
 int main() {
 	// Initializing
@@ -52,7 +53,8 @@ int main() {
 	return 0;
 }
 void game_loop() {
-	if(!is_game_over) update_block();
+	if(IsKeyPressed(KEY_SPACE)) is_paused = !is_paused;
+	if(!(is_game_over || is_paused)) update_block();
 	BeginDrawing();
 	ClearBackground(BLACK);
 	draw_grid();
@@ -210,6 +212,8 @@ void handle_input() {
 	} else {
 		speed = 10;
 	}
+
+	
 }
 
 void check_rows(){
