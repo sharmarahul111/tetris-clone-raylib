@@ -23,6 +23,7 @@ void draw_score(void);
 void draw_next_block(void);
 void game_over(void);
 void pause_card(void);
+void display_message(char text[]);
 
 
 Cell grid[GRID_ROWS][GRID_COLS];
@@ -35,8 +36,16 @@ int rotation = 0;
 int frame = 0;
 int speed = 10;
 int score = 0;
+
+int dialog_width = 200;
+int dialog_height = 80;
+int dialog_x;
+int dialog_y;
+
+
 bool is_game_over = false;
 bool is_paused = false;
+bool is_started = false;
 
 Sound fahh;
 Sound technologia;
@@ -44,10 +53,11 @@ Sound gameover;
 char score_text[5];
 int main() {
 	// Initializing
-	// srand(time(0));
 	SetRandomSeed(time(0));
 	printf("Running...\n");
 	InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Tetris Clone");
+	dialog_x = (WINDOW_WIDTH-dialog_width)/2;
+	dialog_y = (WINDOW_HEIGHT-dialog_height)/2;
 	InitAudioDevice();
 	// make windows friendly
 	fahh = LoadSound("assets/fahh.wav");
@@ -77,7 +87,7 @@ void game_loop() {
 		PlaySound(technologia);
 		is_paused = !is_paused;
 	}
-	if(!(is_game_over || is_paused)) update_block();
+	if(!(is_game_over || is_paused) && is_started) update_block();
 	BeginDrawing();
 	ClearBackground(BLACK);
 	draw_grid();
@@ -90,6 +100,17 @@ void game_loop() {
 	}
 	if(is_paused){
 		pause_card();
+	}
+	if(!is_started){
+		display_message("PLAY");
+		if(IsMouseButtonDown(MOUSE_BUTTON_LEFT)){
+			int x = GetMouseX();
+			int y = GetMouseY();
+			if(x >= dialog_x && x <= dialog_x + dialog_width &&
+				 y >= dialog_y && y <= dialog_y + dialog_height){
+					is_started = true;
+				 }
+		}
 	}
 	DrawFPS(30, 20);
 	EndDrawing();
@@ -240,12 +261,12 @@ void game_over(){
 	DrawText(score_text, x+(width-MeasureText(score_text, 70))/2, y+90, 70, GREEN);
 }
 void pause_card(){
-	int width = 200;
-	int height = 80;
-	int x = (WINDOW_WIDTH-width)/2;
-	int y = (WINDOW_HEIGHT-height)/2;
 	char text[] = "PAUSED";
-	DrawRectangle(x, y, width, height, BLACK);
-	DrawRectangleLines(x, y, width, height, GREEN);
-	DrawText(text, x+(width-MeasureText(text, 40))/2, y+20, 40, GREEN);
+	display_message(text);
+}
+void display_message(char text[]){
+	
+	DrawRectangle(dialog_x, dialog_y, dialog_width, dialog_height, BLACK);
+	DrawRectangleLines(dialog_x, dialog_y, dialog_width, dialog_height, GREEN);
+	DrawText(text, dialog_x+(dialog_width-MeasureText(text, 40))/2, dialog_y+20, 40, GREEN);
 }
