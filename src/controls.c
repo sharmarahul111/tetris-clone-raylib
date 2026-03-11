@@ -5,7 +5,7 @@ extern int speed, blockX, blockY, rotation;
 extern float t;
 extern bool is_paused;
 extern Sound technologia;
-extern Cell grid[GRID_ROWS][GRID_COLS];
+extern int grid[GRID_ROWS][GRID_COLS];
 extern Block block;
 void handle_input() {
 	if (IsKeyPressed(KEY_RIGHT)) {
@@ -40,7 +40,7 @@ void rotate_piece(){
 				(
 					(gridX < 0 || gridX >= GRID_COLS) ||
 					(gridY >= GRID_ROWS) ||
-					(grid[gridY][gridX].data != 0)
+					(grid[gridY][gridX] != 0)
 				)
 			) {
 				can_rotate = false;
@@ -60,7 +60,7 @@ void move_right(){
 			// check if block can go right
 			int gridX = blockX + j;
 			int gridY = blockY + i;
-			if (block.piece.data[rotation][i][j] != 0 && (gridX >= GRID_COLS - 1 || (grid[gridY][gridX + 1].data != 0))) {
+			if (block.piece.data[rotation][i][j] != 0 && (gridX >= GRID_COLS - 1 || (grid[gridY][gridX + 1] != 0))) {
 				can_go_right = false;
 				break;
 			}
@@ -78,7 +78,7 @@ void move_left(){
 			// check if block can go left
 			int gridX = blockX + j;
 			int gridY = blockY + i;
-			if (block.piece.data[rotation][i][j] != 0 && (gridX <= 0 || (grid[gridY][gridX - 1].data != 0))) {
+			if (block.piece.data[rotation][i][j] != 0 && (gridX <= 0 || (grid[gridY][gridX - 1] != 0))) {
 				can_go_left = false;
 				break;
 			}

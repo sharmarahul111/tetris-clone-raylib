@@ -26,7 +26,7 @@ void pause_card(void);
 void display_message(char text[]);
 
 
-Cell grid[GRID_ROWS][GRID_COLS];
+int grid[GRID_ROWS][GRID_COLS];
 Block block;
 int next_piece_type = 0;
 // int saved_block_type = 0;
@@ -99,7 +99,7 @@ void game_loop() {
 	draw_block();
 	draw_score();
 	draw_next_block();
-	 if(is_game_over) {
+	if(is_game_over) {
 		game_over();
 	}
 	if(is_paused){
@@ -129,7 +129,8 @@ void draw_grid() {
 		for (int j = 0; j < GRID_COLS; j++) {
 			int posX = SIDEBAR_WIDTH + j * CELL_SIZE;
 			int posY = i * CELL_SIZE;
-			DrawRectangle(posX + 4, posY + 4, CELL_SIZE - 4, CELL_SIZE - 4, grid[i][j].color);
+			Color color = grid[i][j]!=0?GREEN:BLACK;
+			DrawRectangle(posX + 4, posY + 4, CELL_SIZE - 4, CELL_SIZE - 4, color);
 		}
 	}
 }
@@ -137,8 +138,7 @@ void draw_grid() {
 void fill_grid() {
 	for (int i = 0; i < GRID_ROWS; i++) {
 		for (int j = 0; j < GRID_COLS; j++) {
-			grid[i][j].color = BLACK;
-			grid[i][j].data = 0;
+			grid[i][j] = 0;
 		}
 	}
 }
@@ -162,7 +162,7 @@ void update_block() {
 			// check if block can go down
 			int gridX = blockX + j;
 			int gridY = blockY + i;
-			if (block.piece.data[rotation][i][j] != 0 && (gridY >= GRID_ROWS - 1 || (grid[gridY + 1][gridX].data != 0))) {
+			if (block.piece.data[rotation][i][j] != 0 && (gridY >= GRID_ROWS - 1 || (grid[gridY + 1][gridX] != 0))) {
 				can_go_down = false;
 				merge_block();
 				next_piece();
@@ -186,8 +186,7 @@ void merge_block() {
 					PlaySound(gameover);
 					is_game_over = true;
 				}
-				grid[gridY][gridX].data = 1;
-				grid[gridY][gridX].color = block.color;
+				grid[gridY][gridX] = 1;
 			}
 		}
 	}
@@ -206,7 +205,7 @@ void check_rows(){
 	for (int i=GRID_ROWS-1; i>=0; i--) {
 		bool can_clear = true;
 		for (int j=0; j<GRID_COLS; j++) {
-			if (grid[i][j].data == 0) {
+			if (grid[i][j] == 0) {
 				can_clear = false;
 				break;
 			}

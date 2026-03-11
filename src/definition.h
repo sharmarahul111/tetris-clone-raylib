@@ -13,10 +13,6 @@
 #define FRAME_RATE 60
 
 typedef struct {
-	int data;
-	Color color;
-} Cell;
-typedef struct {
 	// data[rotation][y][x]
 	int data[4][4][4];
 } Piece;
